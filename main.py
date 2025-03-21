@@ -121,7 +121,7 @@ class Player:
             if win.left < self.pos.x < win.left + win.width - self.size[0]//2:
 
                 # Lands on top of a window
-                if win.top + self.size[0] > self.pos.y + self.size[1] > win.top:
+                if win.top + 50 > self.pos.y + self.size[1] > win.top:
                     if "Player" in win.title:
                         for player in players:
                             if player.title == win.title:
@@ -256,18 +256,18 @@ class ScoreLabel:
         #self.window.wm_attributes('-transparentcolor', 'black')
         self.window.after(10, self.update)
 
-        self.label = tk.Label(self.window, text=f"Player 1 # 500 : 500 # Player 2", padx=20, pady=15, fg="white", relief="sunken", bd=10)
+        self.label = tk.Label(self.window, padx=20, pady=15, fg="white", relief="sunken", bd=10, width=70)
         self.label.pack()
     def update(self):
 
-        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="green", bg="black", font=("Courier New", 16), padx=10)
+        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="green", bg="black", font=("Consolas", 16), padx=10)
 
         x = (self.screen_size[0] - self.window.winfo_width())//2
         y = (self.screen_size[1] - self.window.winfo_height())//2
         self.window.geometry(f"{self.window.winfo_width()}x{self.window.winfo_height()}+{x}+{y}")
         self.window.after(1, self.update)
 
-def genPlayer(root, color, inp, alternateKeys=[]):
+def genPlayer(root, color, inp):
 
     p = Player(root, color=color, controls=inp)
 
@@ -320,6 +320,7 @@ def play(root):
 
 
 if __name__ == '__main__':
+
     root = tk.Tk()
     root.attributes('-topmost', True)
     root.configure(background="black")
