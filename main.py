@@ -124,8 +124,10 @@ class Player:
                         print("woo")
                         for player in players:
                             if player.title == win.title:
-                                player.score += 1
-                                self.pos = Vector(self.res[0]//2, self.res[1]//2)
+                                self.score += 1
+                                player.pos = Vector(self.res[0]//2, self.res[1]//2)
+                                player.window.geometry(
+                                    f"{player.size[0]}x{player.size[1]}+{int(player.pos.x)}+{int(player.pos.y)}")
                                 break
                         break
 
