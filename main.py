@@ -95,7 +95,7 @@ class Player:
         self.window.configure(background=color)
 
         self.controls = controls
-        lb = tk.Label(self.window, text=f"{self.num + 1}", background=color, font=("Consolas", 15))
+        lb = tk.Label(self.window, text=f"{self.num + 1}", background=color, font=("Consolas", 25))
         lb.pack()
         self.window.after(10, self.update)
 
@@ -129,7 +129,6 @@ class Player:
                                 player.window.geometry(
                                     f"{player.size[0]}x{player.size[1]}+{int(player.pos.x)}+{int(player.pos.y)}")
                                 break
-                        break
 
                     # apply friction
                     self.vel.x *= 0.88
