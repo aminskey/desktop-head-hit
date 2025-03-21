@@ -95,7 +95,7 @@ class Player:
         self.window.configure(background=color)
 
         self.controls = controls
-        lb = tk.Label(self.window, text=f"{self.num + 1}", background=color)
+        lb = tk.Label(self.window, text=f"{self.num + 1}", background=color, font=("Consolas", 15))
         lb.pack()
         self.window.after(10, self.update)
 
@@ -120,6 +120,15 @@ class Player:
 
                 # Lands on top of a window
                 if win.top + self.size[0] > self.pos.y + self.size[1] > win.top:
+                    if "Player" in win.title:
+                        print("woo")
+                        for player in players:
+                            if player.title == win.title:
+                                player.score += 1
+                                self.pos = Vector(self.res[0]//2, self.res[1]//2)
+                                break
+                        break
+
                     # apply friction
                     self.vel.x *= 0.88
 
@@ -130,13 +139,6 @@ class Player:
                     if abs(self.vel.y) > 0:
                         self.vel.y *= -0.5
 
-                    if "Player" in win.title:
-                        print("woo")
-                        for player in players:
-                            if player.title == win.title:
-                                player.score += 1
-                                self.pos = Vector(self.res[0]//2, self.res[1]//2)
-                                break
 
 
         if self.num == 0:
@@ -247,15 +249,16 @@ class ScoreLabel:
 
         self.window = tk.Toplevel(root)
         self.window.configure(background="blue")
-        #self.window.overrideredirect(True)
+        self.window.overrideredirect(True)
         self.window.attributes('-topmost', True)
-        #self.window.wm_attributes('-transparentcolor', 'black')
+        self.window.wm_attributes('-transparentcolor', 'black')
         self.window.after(10, self.update)
 
         self.label = tk.Label(self.window, text=f"Player 1 # 500 : 500 # Player 2", padx=20, pady=15, fg="white")
         self.label.pack(padx=10)
     def update(self):
-        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="white", bg="blue", font=("Courier New", 16))
+
+        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="white", bg="blue", font=("Courier New", 16), padx=10)
 
         x = (self.screen_size[0] - self.window.winfo_width())//2
         y = (self.screen_size[1] - self.window.winfo_height())//2
@@ -290,6 +293,4 @@ if __name__ == '__main__':
     t1.start()
     t2.start()
 
-    root.bind('<f>', lambda: root.focus_force())
-    root.bind('<FocusOut>', lambda: root.focus_force())
     root.mainloop()
