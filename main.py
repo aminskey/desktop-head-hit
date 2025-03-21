@@ -6,7 +6,9 @@ import threading
 from vector import Vector
 from pyautogui import size
 from PIL import Image
-from time import sleep
+from tkinter import ttk
+from random import randint
+from math import sin
 
 FPS = 20
 
@@ -121,7 +123,6 @@ class Player:
                 # Lands on top of a window
                 if win.top + self.size[0] > self.pos.y + self.size[1] > win.top:
                     if "Player" in win.title:
-                        print("woo")
                         for player in players:
                             if player.title == win.title:
                                 self.score += 1
@@ -249,24 +250,24 @@ class ScoreLabel:
         self.screen_size = size()
 
         self.window = tk.Toplevel(root)
-        self.window.configure(background="blue")
+        #self.window.configure(background="blue")
         self.window.overrideredirect(True)
         self.window.attributes('-topmost', True)
-        self.window.wm_attributes('-transparentcolor', 'black')
+        #self.window.wm_attributes('-transparentcolor', 'black')
         self.window.after(10, self.update)
 
-        self.label = tk.Label(self.window, text=f"Player 1 # 500 : 500 # Player 2", padx=20, pady=15, fg="white")
-        self.label.pack(padx=10)
+        self.label = tk.Label(self.window, text=f"Player 1 # 500 : 500 # Player 2", padx=20, pady=15, fg="white", relief="sunken", bd=10)
+        self.label.pack()
     def update(self):
 
-        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="white", bg="blue", font=("Courier New", 16), padx=10)
+        self.label.configure(text=f"P1 # {s1} : {s2} # P2", fg="green", bg="black", font=("Courier New", 16), padx=10)
 
         x = (self.screen_size[0] - self.window.winfo_width())//2
         y = (self.screen_size[1] - self.window.winfo_height())//2
         self.window.geometry(f"{self.window.winfo_width()}x{self.window.winfo_height()}+{x}+{y}")
         self.window.after(1, self.update)
 
-def genPlayer(root, color, inp):
+def genPlayer(root, color, inp, alternateKeys=[]):
 
     p = Player(root, color=color, controls=inp)
 
@@ -278,20 +279,53 @@ def genPlayer(root, color, inp):
 
     p.run()
 
+def genLevel(root):
+    dir = -1
+    startPoint = [size()[0]//2, size()[1] - 55*2]
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.configure(background='black')
-    #root.overrideredirect(True)
-    root.attributes('-topmost', True)
-    #root.wm_attributes('-transparentcolor', 'black')
+    for i in range(10):
 
-    scores = ScoreLabel(root)
+        if startPoint[1] < size()[1]//4 and dir < 0:
+            dir = 1
+            startPoint[0] = size()[0]//4
 
-    t1 = threading.Thread(target=genPlayer, args=(root, "#11ff11", ["<Left>", "<Right>", "<Up>", "<Down>"]))
-    t2 = threading.Thread(target=genPlayer, args=(root, "#ff1111", ["<a>", "<d>", "<w>", "<s>"]))
+        if startPoint[1] > size()[1] * 7//8 and dir > 0:
+            dir = -1
+            startPoint[0] = size()[0]* 3//4
+
+
+        startPoint[1] += i * 120 * dir
+        startPoint[0] += 30 * sin(startPoint[1]*2)+randint(-200, 200)
+
+        tmp = tk.Toplevel(root)
+        tmp.geometry(f"200x55+{int(startPoint[0])}+{int(startPoint[1])}")
+        tmp.configure(background="brown")
+        tmp.overrideredirect(True)
+        tmp.attributes('-topmost', True)
+
+        print(i, startPoint)
+
+        #lb = tk.Label(tmp, text=f"{i}", font=("Arial", 25), bg="brown")
+        #lb.pack()
+
+def play(root):
+    t1 = threading.Thread(target=genPlayer, args=(root, "#11ff11", ["<Left>", "<Right>", "<Up>"]))
+    t2 = threading.Thread(target=genPlayer, args=(root, "#ff1111", ["<a>", "<d>", "<w>"]))
 
     t1.start()
     t2.start()
+
+    ScoreLabel(root)
+
+
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.attributes('-topmost', True)
+    root.configure(background="black")
+    root.geometry("300x200")
+
+    genLevel(root)
+    play(root)
 
     root.mainloop()
