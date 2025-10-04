@@ -184,7 +184,7 @@ def play(root):
 
 
 
-"""
+
 if __name__ == '__main__':
 
     root = tk.Tk()
@@ -196,4 +196,5 @@ if __name__ == '__main__':
     play(root)
 
     root.mainloop()
-"""
+
+
